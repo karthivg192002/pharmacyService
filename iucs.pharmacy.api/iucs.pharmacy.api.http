@@ -1,0 +1,6 @@
+@iucs.pharmacy.api_HostAddress = http://localhost:5279
+
+GET {{iucs.pharmacy.api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
