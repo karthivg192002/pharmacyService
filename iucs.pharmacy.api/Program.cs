@@ -4,7 +4,9 @@ using iucs.pharmacy.application.Services;
 using iucs.pharmacy.application.Services.CommonCurdService;
 using iucs.pharmacy.application.Services.MastersCurdService;
 using iucs.pharmacy.application.Services.TenantService;
+using iucs.pharmacy.domain.Data;
 using iucs.pharmacy.domain.Data.Tenant;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,7 @@ builder.Services.AddScoped<ISalesInvoiceService, SalesInvoiceService>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITenantContext, TenantContext>();
+builder.Services.AddDbContext<AppDbContext>();
 
 builder.Services.AddHttpClient<ITenantService, TenantService>(c =>
 {
@@ -54,6 +57,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    app.MapScalarApiReference(options =>
+    {
+        options.Title = "Pharmacy Api";
+        options.Theme = ScalarTheme.Kepler;
+        options.ShowSidebar = true;
+    });
 }
 
 app.UseHttpsRedirection();

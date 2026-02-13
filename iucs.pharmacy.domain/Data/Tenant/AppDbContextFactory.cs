@@ -9,12 +9,12 @@ namespace iucs.pharmacy.domain.Data.Tenant
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-            var connectionString = Environment.GetEnvironmentVariable("SALESDESIGN");
+            var connectionString = Environment.GetEnvironmentVariable("PHARMACYDESIGN");
 
             if (string.IsNullOrWhiteSpace(connectionString))
-                throw new InvalidOperationException("Environment variable 'SALESDESIGN' is not set.");
+                throw new InvalidOperationException("Environment variable 'PHARMACYDESIGN' is not set.");
 
-            optionsBuilder.UseNpgsql(connectionString, b => b.MigrationsAssembly("iucs.salesExecutive.api"));
+            optionsBuilder.UseNpgsql(connectionString, b => b.MigrationsAssembly("iucs.pharmacy.domain"));
             var tenantContext = new DesignTimeTenantContext(connectionString);
 
             return new AppDbContext(optionsBuilder.Options, tenantContext);

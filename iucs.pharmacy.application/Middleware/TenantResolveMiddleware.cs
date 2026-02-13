@@ -48,7 +48,7 @@ namespace iucs.pharmacy.application.Middleware
 
             try
             {
-                var tenant = await tenantService.ResolveAsync(tenantCode.ToString(), env.ToString(), "sales-executive");
+                var tenant = await tenantService.ResolveAsync(tenantCode.ToString(), env.ToString(), "pharmacy");
 
                 if (tenant == null || string.IsNullOrWhiteSpace(tenant.Connection))
                 {
