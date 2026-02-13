@@ -1,4 +1,4 @@
-﻿using iucs.pharmacy.application.Dto;
+﻿using iucs.pharmacy.application.Dto.Transaction;
 using iucs.pharmacy.application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

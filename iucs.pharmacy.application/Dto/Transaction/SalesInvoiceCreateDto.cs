@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static iucs.pharmacy.domain.Entities.Common.EnumsModel;
 
-namespace iucs.pharmacy.application.Dto
+namespace iucs.pharmacy.application.Dto.Transaction
 {
     public class SalesInvoiceCreateDto
     {

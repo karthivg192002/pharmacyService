@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using iucs.pharmacy.application.Dto;
 using iucs.pharmacy.application.Dto.ResponseDto;
+using iucs.pharmacy.application.Dto.Transaction;
 using iucs.pharmacy.domain.Data;
 using iucs.pharmacy.domain.Entities.Transaction;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static iucs.pharmacy.domain.Entities.Common.EnumsModel;
 
 namespace iucs.pharmacy.application.Services
@@ -136,33 +137,21 @@ namespace iucs.pharmacy.application.Services
                 await _db.SaveChangesAsync();
                 await tx.CommitAsync();
 
-                return new ServiceResult<Guid>
-                {
-                    Success = true,
-                    Data = invoice.Id
-                };
+                return ServiceResult<Guid>.SuccessResult(invoice.Id);
             }
             catch (DbUpdateException ex)
             {
                 await tx.RollbackAsync();
                 _logger.LogError(ex, "DB error in sales");
 
-                return new ServiceResult<Guid>
-                {
-                    Success = false,
-                    Message = "Database error"
-                };
+                return ServiceResult<Guid>.Failure(ex.Message);
             }
             catch (Exception ex)
             {
                 await tx.RollbackAsync();
                 _logger.LogError(ex, "Sales error");
 
-                return new ServiceResult<Guid>
-                {
-                    Success = false,
-                    Message = ex.Message
-                };
+                return ServiceResult<Guid>.Failure(ex.Message);
             }
         }
     }

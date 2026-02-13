@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using iucs.pharmacy.application.Dto.ResponseDto;
+using iucs.pharmacy.application.Dto.Transaction;
 using iucs.pharmacy.domain.Data;
 using iucs.pharmacy.domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace iucs.pharmacy.application.Services.CommonCurdService
 {
@@ -36,31 +38,19 @@ namespace iucs.pharmacy.application.Services.CommonCurdService
                 _db.Set<TEntity>().Add(entity);
                 await _db.SaveChangesAsync();
 
-                return new ServiceResult<TDto>
-                {
-                    Success = true,
-                    Data = _mapper.Map<TDto>(entity)
-                };
+                return ServiceResult<TDto>.SuccessResult(_mapper.Map<TDto>(entity));
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "DB error");
 
-                return new ServiceResult<TDto>
-                {
-                    Success = false,
-                    Message = "Database error"
-                };
+                return ServiceResult<TDto>.Failure(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unhandled error");
 
-                return new ServiceResult<TDto>
-                {
-                    Success = false,
-                    Message = ex.Message
-                };
+                return ServiceResult<TDto>.Failure(ex.Message);
             }
         }
 
@@ -71,29 +61,16 @@ namespace iucs.pharmacy.application.Services.CommonCurdService
                 var entity = await _db.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
                 if (entity == null)
-                {
-                    return new ServiceResult<TDto>
-                    {
-                        Success = false,
-                        Message = "Record not found"
-                    };
-                }
+                    return ServiceResult<TDto>.Failure("Record not found");
 
-                return new ServiceResult<TDto>
-                {
-                    Success = true,
-                    Data = _mapper.Map<TDto>(entity)
-                };
+                return ServiceResult<TDto>
+                    .SuccessResult(_mapper.Map<TDto>(entity));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetById failed");
 
-                return new ServiceResult<TDto>
-                {
-                    Success = false,
-                    Message = ex.Message
-                };
+                return ServiceResult<TDto>.Failure(ex.Message);
             }
         }
 
@@ -104,56 +81,44 @@ namespace iucs.pharmacy.application.Services.CommonCurdService
                 var entity = await _db.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
 
                 if (entity == null)
-                {
-                    return new ServiceResult<TDto>
-                    {
-                        Success = false,
-                        Message = "Record not found"
-                    };
-                }
+                    return ServiceResult<TDto>.Failure("Record not found");
 
-                // map dto into existing tracked entity
                 _mapper.Map(dto, entity);
 
                 await _db.SaveChangesAsync();
 
-                return new ServiceResult<TDto>
-                {
-                    Success = true,
-                    Data = _mapper.Map<TDto>(entity)
-                };
+                return ServiceResult<TDto>
+                    .SuccessResult(_mapper.Map<TDto>(entity));
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "DB error in Update");
 
-                return new ServiceResult<TDto>
-                {
-                    Success = false,
-                    Message = "Database error"
-                };
+                return ServiceResult<TDto>.Failure("Database error");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Update failed");
 
-                return new ServiceResult<TDto>
-                {
-                    Success = false,
-                    Message = ex.Message
-                };
+                return ServiceResult<TDto>.Failure(ex.Message);
             }
         }
 
         public virtual async Task<ServiceResult<List<TDto>>> GetAllAsync()
         {
-            var data = await _db.Set<TEntity>().AsNoTracking().ToListAsync();
-
-            return new ServiceResult<List<TDto>>
+            try
             {
-                Success = true,
-                Data = _mapper.Map<List<TDto>>(data)
-            };
+                var data = await _db.Set<TEntity>().AsNoTracking().ToListAsync();
+
+                return ServiceResult<List<TDto>>
+                    .SuccessResult(_mapper.Map<List<TDto>>(data));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetAll failed");
+
+                return ServiceResult<List<TDto>>.Failure(ex.Message);
+            }
         }
     }
 }

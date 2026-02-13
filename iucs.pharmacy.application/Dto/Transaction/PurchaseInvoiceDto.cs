@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iucs.pharmacy.application.Dto
+namespace iucs.pharmacy.application.Dto.Transaction
 {
     public class PurchaseInvoiceDto
     {

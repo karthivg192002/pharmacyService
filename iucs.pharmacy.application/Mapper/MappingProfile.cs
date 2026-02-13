@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using iucs.pharmacy.application.Dto;
+using iucs.pharmacy.application.Dto.Transaction;
 using iucs.pharmacy.domain.Entities.Masters;
 using iucs.pharmacy.domain.Entities.Transaction;
 
