@@ -20,9 +20,9 @@ namespace iucs.pharmacy.application.Services.CommonCurdService
     {
         protected readonly AppDbContext _db;
         protected readonly IMapper _mapper;
-        protected readonly ILogger _logger;
+        private readonly ILogger<CrudService<TDto, TEntity>> _logger;
 
-        public CrudService(AppDbContext db, IMapper mapper, ILogger logger)
+        public CrudService(AppDbContext db, IMapper mapper, ILogger<CrudService<TDto, TEntity>> logger)
         {
             _db = db;
             _mapper = mapper;

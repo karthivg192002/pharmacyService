@@ -19,7 +19,12 @@ namespace iucs.pharmacy.api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(PurchaseInvoiceDto dto)
         {
-            var userId = Guid.Parse(User.FindFirst("sub")!.Value);
+            var sub = User?.FindFirst("sub")?.Value;
+
+            //if (string.IsNullOrEmpty(sub))
+            //    return Unauthorized("User not authenticated");
+
+            var userId = Guid.Empty;
 
             var result = await _service.CreateAsync(dto, userId);
 
@@ -50,7 +55,12 @@ namespace iucs.pharmacy.api.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, PurchaseInvoiceDto dto)
         {
-            var userId = Guid.Parse(User.FindFirst("sub")!.Value);
+            var sub = User?.FindFirst("sub")?.Value;
+
+            //if (string.IsNullOrEmpty(sub))
+            //    return Unauthorized("User not authenticated");
+
+            var userId = Guid.Empty;
 
             var result = await _service.UpdateAsync(id, dto, userId);
 
